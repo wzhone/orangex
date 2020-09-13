@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+    <script src="__jquery__"></script>
+</head>
+<style>
+*{
+    margin: 0px;
+    font-family:sans-serif;
+    font-weight: 200;
+}
+h1{
+    text-align: center;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    color:#FF9933;
+    font-size: 50px;
+    animation:mymove 0.8s infinite;
+    animation-direction:alternate;
+    animation-timing-function: linear;
+    cursor: default;
+}
+h1 .three{
+    color:#FFeeee;
+    opacity: 1;
+    position: relative;
+
+
+}
+body{
+    background: #222222;
+}
+@keyframes mymove
+{
+    from {
+         text-shadow:0 0 0px #FF9933;
+    }
+    to {
+        text-shadow:0 0 40px #FF9933;
+    }
+}
+
+</style>
+<body>
+<div id="bg"></div>
+<h1><span class="main">__VERSION__</span> <span class="three">1.0</span></h1>
+
+</body>
+</html>

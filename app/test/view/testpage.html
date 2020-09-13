@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="__jquery__"></script>
+    <meta charset="utf-8" />
+    <title>__VERSION__ - test</title>
+    <script>
+
+        var test = 0;
+
+        $(function () {
+            testAjax();
+            testParam();
+            testHeader();
+            $("#result").append("<h3>共三项测试</h3>")
+            setTimeout(function(){
+                window.location.href = "/welcome";
+            },"1000");
+        })
+
+
+        function testAjax() {
+            $.post("__page__", "test=ajax&testid=1", function (r) {
+                if (r.state) {
+                    $("#result").append("<p>AJAX请求成功</p>")
+                    test += 1;
+                } else {
+                    $("#result").append("<h1>AJAX请求失败</h1>")
+                }
+            }, "json")
+        }
+        function testParam() {
+            $.post("/test/param/__VERSION__?test=param", "", function (r) {
+                if (r.state) {
+                    $("#result").append("<p>URL带参请求请求成功</p>")
+                    test += 1;
+                } else {
+                    $("#result").append("<h1>URL带参请求请求失败</h1>")
+                }
+            }, "json")
+        }
+        function testHeader() {
+            $.ajax({
+                type: "put",
+                dataType:"json",
+                url: "/test/headertest",
+                beforeSend: function (XMLHttpRequest) {
+                    XMLHttpRequest.setRequestHeader("testtype", "header");
+                },
+                success: function (r,status,xhr) {
+                    if (xhr.getResponseHeader("result")=="success" &&
+                        xhr.getResponseHeader("version")== "__VERSION__" &&
+                        r.state)
+                    {
+                        $("#result").append("<p>HEADER测试请求请求成功</p>")
+                        test += 1;
+                    } else {
+                        $("#result").append("<h1>HEADER测试请求请求失败</h1>")
+                    }
+                }
+            });
+        }
+    </script>
+    <style>
+    </style>
+</head>
+
+<body>
+    <div id="result">
+
+
+
+    </div>
+</body>
+
+</html>
