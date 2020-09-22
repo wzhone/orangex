@@ -81,11 +81,9 @@ class Kernel implements leader\Kernel{
                 $that->response->response();
             }
         );
-
     }
 
     public function start() : void{
-
 
         try {
             $this->init();
@@ -100,6 +98,14 @@ class Kernel implements leader\Kernel{
                 $this->view->errorPage(404);
             }else{
                 $this->request->setServiceInfo($matchresult);
+
+                # 注入配置文件
+                $this->config->loadServiceConfig(
+                    pathjoin(
+                        $this->request->serviceInfo()->getBasePath(),
+                        "config.php"
+                    )
+                );
             
                 # 初始化服务运行环境
 
@@ -138,7 +144,6 @@ class Kernel implements leader\Kernel{
             $this->app->call([$this->liquidator,'callEvent']);
         }
     }
-
 
     /**
      * 调用目标应用函数

@@ -29,17 +29,32 @@ class midd1{
 
         # 测试配置类
         $configfile =  pathjoin(COMMON,"config","test.config.php");
-        file_put_contents($configfile,'<?php return ["test"=>["dot"=>["key"=>"value"]]];');
+        file_put_contents($configfile,'<?php return ["test"=>["dot"=>["key"=>"value","key2"=>"value2"]]];');
 
         $cenv = $ReflectionConfig = (new \ReflectionClass($config))->getProperty("env"); 
         $cenv->setAccessible(true);
-        $cenv->setValue($config,[ "test" =>["test"=>["dot"=>["key"=>"envvalue"]]]]);
-
+        $cenv->setValue($config,[ 
+            "test" =>[
+                "test"=>[
+                    "dot"=>[
+                        "key"=>"envvalue"
+                    ],
+                    "allcover" => "true"
+                ]
+            ]
+        ]);
 
         assert($config->get("test.test.dot.key") == "envvalue");
         assert($config->getConfig("test.test.dot.key") == "value");
-        assert($config->get("test.test.dot.key2") == null);
-        assert($config->getConfig("test.test.dot.key2") == null);
+        assert($config->get("test.test.dot.keynone") == null);
+        assert($config->getConfig("test.test.dot.keynone") == null);
+
+        # 数组值获取
+        assert($config->get("test.test.dot")["key"] == "envvalue");
+        assert($config->get("test.test.dot")["key2"] == "value");
+
+        # 数组覆盖
+        assert($config->get("test.test.allcover") == "true");  
 
         unlink($configfile);
 

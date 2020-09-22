@@ -1,4 +1,8 @@
 <?php
+
+
+use \core\Container;
+
 return [
     "info" =>[
         "prefix" => "/welcome"
@@ -8,7 +12,7 @@ return [
         [
             "url" => "/",
             "method" => "get",
-            "call" => function(){
+            "call" => function(Container $app){
                 return "page.welcome";
             },
             "middleware" => []
