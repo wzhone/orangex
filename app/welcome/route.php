@@ -12,9 +12,7 @@ return [
         [
             "url" => "/",
             "method" => "get",
-            "call" => function(Container $app){
-                return "page.welcome";
-            },
+            "call" => "view:page.welcome",
             "middleware" => []
         ]
     ]

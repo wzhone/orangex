@@ -11,13 +11,24 @@ class View implements \core\leader\view\View{
     private array $data = [];
     private array $global = [];
 
+    #Config类的引用
+    private Config $config;
+    private Request $request;
+
     private string $view = '';
 
     public function __construct(Config $config,Request $request){
-        $this->global = $config->get('core.viewglobal',[]);
+        $this->config = $config;
+        $this->request = $request;
+    }
+
+    private function initGlobal(){
+        $this->global = $this->config->get('core.viewglobal',[]);
+        
+        #初始化魔术常量
         $this->global = \array_merge($this->global,[
-            "page"=>$request->uri()->url(),
-            "request"=>$request->uri()->requestUrl()
+            "page"=>$this->request->uri()->url(),  //去除get的url
+            "request"=>$this->request->uri()->requestUrl() //请求的url
         ]);
     }
 
@@ -69,6 +80,7 @@ class View implements \core\leader\view\View{
     private function complicate(string $file,array $param = []){
         $param = array_merge($this->data,$param);
         $file = file_get_contents($file);
+        $this->initGlobal();
         $file = $this->replaceGlobal($file,$this->global);
         $file = $this->replaceVar($file,$param);
         $this->view = $file;

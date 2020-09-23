@@ -121,7 +121,11 @@ class Kernel implements leader\Kernel{
                 #run
                 if ($run){
                     $runret = $this->run();
+
+                    # 执行后置中间件函数
                     $this->app->call([$this->middleware,'post']);
+
+                    # 使用view分析函数返回值，确定返回到前端的数据
                     $this->app->call([$this->view,'analysis'],[$runret]);
                 }
             }
@@ -153,6 +157,13 @@ class Kernel implements leader\Kernel{
         $info = $this->request->serviceInfo();
         $param = $info->urlparam();
         $call = $info->call();
+
+        if (is_string($call)){
+            if (strpos($call,"view:") === 0){
+                return substr($call,5);
+            }
+        }
+
 
         $ret = $this->app->call($call,$param);
         return $ret;

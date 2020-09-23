@@ -40,6 +40,12 @@ interface Request{
      */
     public function method() : string;
 
+
+    /**
+     * 获取当前请求的域名，返回一个全小写的字符串
+     * @return string
+     */
+    public function domain() : string;
     
     /**
      * 获取Uri类

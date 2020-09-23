@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 
 return [
     "info" =>[
-        "prefix" => ""
+        "prefix" => "",
     ],
     "routes" =>[
         [

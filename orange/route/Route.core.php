@@ -24,10 +24,32 @@ class Route implements \core\leader\route\Route{
 
     public function match(string $facturl,string $method,Request $request){
         
-        foreach($this->routes as $service => $datas){
+        foreach($this->routes as $service => $datas){ #遍历每个服务的路由文件
             $info = $datas['info'] ?? [];
-            foreach($datas['routes'] as $data){
-                $urlprefix = $info['prefix'] ?? '';
+
+            # 域名匹配
+            $domain = $info["domain"] ?? null;
+            if ($domain != null){
+                if (is_array($domain)){
+                    foreach ($domain as $value){
+                        if (!$this->matchDomain($value,$request->domain())) continue 2;
+                    }
+                }else{
+                    if (!$this->matchDomain($domain,$request->domain())) continue;
+                }
+            }
+
+            # 前缀处理
+            $urlprefix = $info['prefix'] ?? '';
+            if ($urlprefix != ''){
+                if ($urlprefix == "/") $urlprefix = "";
+                if ($urlprefix[0] != '/')
+                    $urlprefix = '/' . $urlprefix;
+                if ($urlprefix[strlen($urlprefix)-1] == '/')
+                    trimLastChar($urlprefix,'/');
+            }
+            
+            foreach($datas['routes'] as $data){ # 遍历路由文件的每条记录
                 $param = [];
                 if (!$this->matchurl($urlprefix.$data['url'],$facturl,$param)){
                     continue;
@@ -115,6 +137,23 @@ class Route implements \core\leader\route\Route{
                 return true;
             }
         }
+    }
+
+    private function matchDomain($configdo,$factdo){
+        $configdo = explode(".",$configdo);
+        $factdo = explode(".",$factdo);
+
+        if (count($configdo) != count($factdo))
+            return false;
+
+        for($i =0 ;$i<count($configdo);$i++){
+            if ($configdo[$i] == "*")
+                continue;
+            if ($configdo[$i] == $factdo[$i])
+                continue;
+            return false;
+        }
+        return true;
     }
    
 }

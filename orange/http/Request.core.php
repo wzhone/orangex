@@ -48,6 +48,10 @@ class Request implements \core\leader\http\Request {
         return strtolower($this->server['REQUEST_METHOD'] ?? 'get');
     }
 
+    public function domain() : string{
+        return strtolower($this->server['HTTP_HOST'] ?? '');
+    }
+
     public function uri() : Uri{
         return $this->uri;
     }
