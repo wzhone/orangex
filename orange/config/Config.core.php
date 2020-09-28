@@ -81,7 +81,7 @@ class Config implements \core\leader\config\Config{
 
     # 从配置文件目录上读取指定config文件
     private function readconfig($name){
-        $file = CONFIG . "$name.config.php";
+        $file = config_path("$name.config.php");
         if(file_exists($file)){
             $this->config[$name] = require $file;
         }else{

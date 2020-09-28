@@ -5,7 +5,7 @@ use \core\leader\config\Config;
 use \core\leader\session\SessionStorage;
 use \core\leader\session\SessionFlash;
 
-class Session implements \core\leader\session\SessionOperate{
+class Session implements \core\leader\session\Session{
 
     private SessionStorage $drive;
     private array $data;

@@ -14,7 +14,7 @@ interface Request{
      * @param string          $default  默认值
      * @return string
      */
-    public function input(string $name,string $default = null) : string;
+    public function input(string $name,string $default = null);
 
 
     /**

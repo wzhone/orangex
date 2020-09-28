@@ -49,7 +49,7 @@ class View implements \core\leader\view\View{
                 return;
             }
         }
-        $file = pathjoin(SUPPORT,'errorpage/',"$status.html");
+        $file = support_path('errorpage/',"$status.html");
         if (file_exists($file)){
             $this->complicate($file,[]);
         }else{
@@ -72,7 +72,7 @@ class View implements \core\leader\view\View{
     }
 
     public function display(string $file,array $param = []) : void{
-        $basepath = pathjoin(serviceInfo()->getBasePath(),config("core.viewpath","view/"));
+        $basepath = pathjoin(serviceInfo()->getAppPath(),config("core.viewpath","view/"));
         $file = str_replace('.','/',$file);
         $this->complicate(pathjoin($basepath,$file.'.html'),$param);
     }

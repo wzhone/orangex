@@ -1,9 +1,9 @@
 <?php
 declare(strict_types = 1);
-
+# 构建IOC 读取依赖
 $app = new \core\Container();
 $app->instance(\core\Container::class,$app);
-$config = require SUPPORT.'orange.config.php';
+$config = require BASEPATH.'orange/support/orange.config.php';
 $dependency  = dotq($config,'dependency');
 foreach($dependency as $depend){
     $alias = $depend[3] ?? null;
@@ -13,9 +13,7 @@ foreach($dependency as $depend){
 }
 
 # register $app
-app($app);
-
+$GLOBALS['core_app'] = $app;
 
 
 $app->call([\core\leader\Kernel::class,'start']);
-

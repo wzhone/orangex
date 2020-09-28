@@ -2,5 +2,6 @@
 .test
 .vscode
 .DS_Store
+common/runtime/**
 
 # .env

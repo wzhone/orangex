@@ -56,7 +56,7 @@ class Container{
 
     # 使用IOC容器工厂生成类
     public function make(string $abstract,array $parameter = [],
-        $autobind = false)
+        bool $autobind = true)
     {
         if ($this->aliases[$abstract]?? false ){
             return $this->make($this->aliases[$abstract],$parameter);
@@ -87,15 +87,8 @@ class Container{
         throw new \Exception("Class [$abstract] that not bound");
     }
 
-    //使用容器解决调用依赖
-    /** callback 允许五种类型
-
-     */
+    //使用容器调用函数
     public function call($callback,array $param = [],string $method = null){
-
-        // if (is_null($method)) {
-        //     throw new \Exception('Method not provided');
-        // }
 
         # $callback为类名 $method为方法名的情况
         if ($method != null ){

@@ -17,11 +17,7 @@ class AutoLoader{
         switch($pathtype){
         case 'core':
             array_shift($class);
-            require_once(CORE.implode('/',$class).'/'.$classname.'.core.php');
-        break;
-        case 'vender':
-            array_shift($class);
-            require_once(VENDER.implode('/',$class).'/'.$classname.'.class.php');
+            require_once(BASEPATH."orange/".implode('/',$class).'/'.$classname.'.core.php');
         break;
         default:
             require_once(BASEPATH.implode('/',$class).'/'.$classname.'.class.php');

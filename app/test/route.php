@@ -13,7 +13,7 @@ return [
     ],
     "routes" =>[
         [
-            "url" => "/",
+            "url" => ["/","/step1"],
             "method" => "get",
             "call" => function(Response $response){
                 return true;

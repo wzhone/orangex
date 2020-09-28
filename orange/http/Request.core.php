@@ -24,7 +24,7 @@ class Request implements \core\leader\http\Request {
         }
     }
 
-    public function input(string $name,string $default = null) : string{
+    public function input(string $name,string $default = null){
         return $this->inputdata[$name] ?? $default;
     }
 

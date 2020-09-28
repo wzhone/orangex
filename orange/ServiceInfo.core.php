@@ -39,8 +39,8 @@ class ServiceInfo implements \core\leader\ServiceInfo{
         return $this->routeitemdata[$name] ?? null;
     }
 
-    public function getBasePath() : string{
-        return pathjoin(APP,$this->servicename);
+    public function getAppPath() : string{
+        return app_path($this->servicename);
     }
 
 }

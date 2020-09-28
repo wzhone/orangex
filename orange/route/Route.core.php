@@ -30,10 +30,10 @@ class Route implements \core\leader\route\Route{
             # 域名匹配
             $domain = $info["domain"] ?? null;
             if ($domain != null){
-                if (is_array($domain)){
+                if (is_array($domain))
                     foreach ($domain as $value){
-                        if (!$this->matchDomain($value,$request->domain())) continue 2;
-                    }
+                        if (!$this->matchDomain($value,$request->domain())) 
+                            continue 2;
                 }else{
                     if (!$this->matchDomain($domain,$request->domain())) continue;
                 }
@@ -48,15 +48,37 @@ class Route implements \core\leader\route\Route{
                 if ($urlprefix[strlen($urlprefix)-1] == '/')
                     trimLastChar($urlprefix,'/');
             }
-            
+
             foreach($datas['routes'] as $data){ # 遍历路由文件的每条记录
                 $param = [];
-                if (!$this->matchurl($urlprefix.$data['url'],$facturl,$param)){
-                    continue;
-                }
+
+                # 匹配方法
                 if (!$this->matchmethod($data['method'],$method)){
                     continue;
                 }
+
+                # 匹配Url
+                if (is_array($data['url'])){
+                    $murl = null;
+                    foreach ($data['url'] as $url){
+                        if (!$this->matchurl($urlprefix.$url,$facturl,$param)){
+                            continue; //匹配此条url失败
+                        }else{
+                            $murl = $url; //保存匹配的Url
+                            break;
+                        }
+                    }
+                    if ($murl != null)
+                        $data['url'] = $murl;
+                    else
+                        continue ;//匹配失败
+                }else{
+                    if (!$this->matchurl($urlprefix.$data['url'],$facturl,$param)){
+                        continue;//匹配失败
+                    }
+                }
+                
+                # 初始化匹配的服务
                 $info = app()->make(ServiceInfo::class,
                     [$service,$param,$urlprefix.$data['url'],$data]
                 );
@@ -69,15 +91,15 @@ class Route implements \core\leader\route\Route{
 
     private function analysisservices(){
         foreach($this->services as $s){
-            $file= APP."$s/route.php";
+            $file= app_path($s,"/route.php");
             $this->routes[$s] = require $file;
         }
     }
 
     private function findservices(){
-        $services=scandir(APP);
+        $services=scandir(app_path());
         foreach($services as $s){
-            $file=APP.$s;
+            $file=app_path($s);
             if(is_dir($file)){
                 if($file=='.' || $file=='..') continue;
                 if (file_exists($file.'/route.php')){
@@ -103,8 +125,10 @@ class Route implements \core\leader\route\Route{
         trimlastchar($configurl,'/');
         trimlastchar($facturl,'/');
 
-        //检测是不是带参url
-        if (strpos($configurl,'{')===false){
+        //检测是不是带参url或者通配符url
+        if (strpos($configurl,'{')===false &&
+            strpos($configurl,'*')===false
+            ){
             //非带参url，直接匹配就好
             if ($configurl == $facturl)
                 return true;
@@ -113,9 +137,9 @@ class Route implements \core\leader\route\Route{
         }else{
             //根据参数进行匹配
             $conurl = preg_quote($configurl,'/');
+            $conurl = str_replace("\*","[^\/]+",$conurl);
             $conurl = preg_replace("/\\\{[A-Za-z0-9_]+\\\}/i","([^\/]+)",$conurl);
             $matches = [];
-            //echo $conurl . " ".$facturl;
             if (0==preg_match('/^'.$conurl.'$/i',$facturl,$matches)){
                 return false;
             }else{

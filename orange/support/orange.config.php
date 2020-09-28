@@ -6,7 +6,8 @@ return [
 
         #base
         ['core\leader\config\Config','core\config\Config','singleton','config'],
-        ['core\leader\session\SessionOperate','core\session\Session','singleton','session'],
+        ['core\leader\Path','core\Path','singleton','path'],
+        ['core\leader\session\Session','core\session\Session','singleton','session'],
         ['core\leader\http\Cookie','core\http\Cookie','singleton','cookie'],
         ['core\leader\http\Request','core\http\Request','singleton','request'],
         ['core\leader\http\Response','core\http\Response','singleton','response'],

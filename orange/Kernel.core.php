@@ -1,7 +1,10 @@
 <?php
 namespace core;
+
 use \core\Container;
 use \core\exception\ExceptionX;
+
+use \core\leader\Path;
 use \core\leader\route\Route;
 use \core\leader\database\DBOperate;
 use \core\leader\config\Config;
@@ -23,12 +26,16 @@ class Kernel implements leader\Kernel{
     private Liquidator $liquidator;
     private View $view;
     private DBOperate $db;
+    private Path $path;
 
 
     private function init(){
         ob_start();
         $that = $this;
         $this->app = app();
+
+        #init path
+        $this->path = $this->app->make('path');
 
         #init Liquidator
         $this->liquidator = $this->app->make('liquidator');
@@ -51,6 +58,7 @@ class Kernel implements leader\Kernel{
                 }
             );
         }
+
 
         #init cookie
         $this->cookie = $this->app->make('cookie');
@@ -102,7 +110,7 @@ class Kernel implements leader\Kernel{
                 # 注入配置文件
                 $this->config->loadServiceConfig(
                     pathjoin(
-                        $this->request->serviceInfo()->getBasePath(),
+                        $this->request->serviceInfo()->getAppPath(),
                         "config.php"
                     )
                 );

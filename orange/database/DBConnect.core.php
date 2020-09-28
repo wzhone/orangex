@@ -46,9 +46,8 @@ class DBConnect implements \core\leader\database\DBConnect{
         $this->statement->bindValue($para,$val);
     }
     
-    public function exec(array $input) : bool{
+    public function exec(array $input = []) : bool{
         try{
-            var_dump($input);
             return $this->statement->execute($input);
         }catch(\PDOException $e){
             if (DEBUG){

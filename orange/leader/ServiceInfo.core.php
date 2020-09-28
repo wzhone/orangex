@@ -36,6 +36,6 @@ interface ServiceInfo{
      * 获取服务文件夹所在物理路径
      * @return string
      */    
-    public function getBasePath(): string;
+    public function getAppPath(): string;
     
 }

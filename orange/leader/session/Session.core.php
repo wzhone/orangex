@@ -3,7 +3,7 @@ namespace core\leader\session;
 
 use \core\leader\config\Config;
 
-interface SessionOperate{
+interface Session{
 
 
     /**

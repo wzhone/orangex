@@ -7,7 +7,7 @@ use \core\leader\http\Cookie;
 use \core\leader\config\Config;
 use \core\leader\http\Request;
 use \core\leader\http\Response;
-use core\leader\session\SessionOperate;
+use core\leader\session\Session;
 
 class midd1{
 
@@ -15,7 +15,7 @@ class midd1{
     public function preHandle(
         Container $app,
         Config $config,
-        SessionOperate $session,
+        Session $session,
         Request $request,
         Cookie $cookie){
 
@@ -28,7 +28,7 @@ class midd1{
         assert($info->name() == "test");
 
         # 测试配置类
-        $configfile =  pathjoin(COMMON,"config","test.config.php");
+        $configfile =  common_path("config","test.config.php");
         file_put_contents($configfile,'<?php return ["test"=>["dot"=>["key"=>"value","key2"=>"value2"]]];');
 
         $cenv = $ReflectionConfig = (new \ReflectionClass($config))->getProperty("env"); 

@@ -1,4 +1,5 @@
 <?php
+use \core\Container;
 
 
 /**
@@ -56,6 +57,8 @@ function dotq(array $array,string $query='',$default=null){
     return $array;
 }
 
+
+
 /**
  * 删除字符串最后的指定字符(支持中文)
  * @param string       $str    要处理的字符串
@@ -95,41 +98,78 @@ function base64_decode_url(string $data) {
     return base64_decode(str_pad(strtr($data, '-_', '+/'), strlen($data) % 4, '=', STR_PAD_RIGHT));
 } 
 
+
+
 /**
- * 获取当前的Container
+ * 读取Container
  * @return Container  
  */
-function app(\core\Container $c = null) {
-    if ($c == null){
-        return end($GLOBALS['core_app']);
-    }else{
-        if (!isset($GLOBALS['core_app'])){
-            $GLOBALS['core_app'] = [];
-        }
-        $GLOBALS['core_app'][] = $c;
-    }
+function app() {
+    return $GLOBALS['core_app'];
 }
+
+
+
+/**
+ * 使用Container制造类
+ * @param string     $abstract    类或者接口字符串
+ * @param array      $para        传入的构造函数参数
+ * @param bool       $autobind    是否自动绑定
+ * @return mixed  
+ */
+function make(string $abstract, array $para = [],bool $autobind = true){
+    return app()->make($abstract,$para,$autobind);
+}
+
+
+
+/**
+ * 使用Container调用类函数，具体使用见IOC容器使用手册
+ * @param mixed      $callback    调用
+ * @param array      $para        传入的函数参数
+ * @param bool       $method      调用的方法
+ * @return mixed
+ */
+function call($callback,array $param = [],string $method = null){
+    return app()->call($callback,$para,$method);
+}
+
 
 
 function session(){
     return app()->make('session');
 }
 
+
+
 function view(){
     return app()->make('view');
 }
+
+
 
 function cookie(){
     return app()->make('cookie');
 }
 
+
+
 function request(){
     return app()->make('request');
 }
 
+function path(){
+    return app()->make('path');
+}
+
+
+
+
 function serviceInfo(){
     return request()->serviceInfo();
 }
+
+
 
 function config(string $configname=null,$default=null){
     if ($configname===null)
@@ -138,11 +178,14 @@ function config(string $configname=null,$default=null){
         return app()->make('config')->get($configname,$default);
 }
 
+
+
 function DB(string $linkname = 'default'){
     $db = app()->make("db");
     $db->connect($linkname);
     return $db;
 }
+
 
 
 function i18n(string $msg,string $msgArea = 'zh-CN'){
@@ -162,42 +205,74 @@ function i18n(string $msg,string $msgArea = 'zh-CN'){
     }
 }
 
-function pathjoin(...$path) : string{
-    if (count($path) == 0) return "";
-    if (count($path) == 1) return $path[0];
 
-    $pathret = $path[0];
-    if ($pathret[strlen($pathret)-1] == '/')
-        trimLastChar($pathret,'/');
 
-    for ($i=1;$i<count($path);$i++){
-        $str = $path[$i];
-        if ($str == "") continue;
-
-        # 每个拼接上的字符串都是前有 '/' 而后没有
-        if ($str[strlen($str)-1] == '/')
-            trimLastChar($str,'/');
-        if ($str[0] != '/')
-            $str = "/$str";
-
-        $pathret .= $str;
-    }
-    return $pathret;
-
+function pathjoin(...$path) : string {
+    return make("path")->join(...$path);
 }
 
-// /**
-//  * 使用当前Container生成的
-//  * @return Container  
-//  */
-// function app(\core\Container $c = null) {
-//     if ($c == null){
-//         return end($GLOBALS['core_app']);
-//     }else{
-//         if (!isset($GLOBALS['core_app'])){
-//             $GLOBALS['core_app'] = [];
-//         }
-//         $GLOBALS['core_app'][] = $c;
-//     }
-// }
 
+
+/**
+ * 判断字符串是不是手机号
+ * @param mixed        $num    要处理的字符串
+ * @return bool
+ */
+function is_phone($num){
+    return (preg_match("/^1[345678]{1}\d{9}$/",$num)==1);
+}
+
+
+
+/**
+ * 判断字符串是不是电子邮箱
+ * @param mixed        $email    要处理的字符串
+ * @return bool
+ */
+function is_email($email){
+    return filter_var(trim($email), FILTER_VALIDATE_EMAIL);
+}
+
+
+/**
+ * 随机返回数组的一个值
+ * @param mixed        $array    要处理的数组
+ * @return bool
+ */
+function random_array(array $array){
+    $keys = array_keys($array);
+    return $array[ mt_rand(0,count($keys) -1 ) ];
+}
+
+
+function core_path(...$path) : string{
+    return path()->core_path(...$path);
+}
+
+function common_path(...$path) : string{
+    return path()->common_path(...$path);
+}
+
+function runtime_path(...$path) : string{
+    return path()->runtime_path(...$path);
+}
+
+function config_path(...$path) : string{
+    return path()->config_path(...$path);
+}
+
+function app_path(...$path) : string{
+    return path()->app_path(...$path);
+}
+
+function cache_path(...$path) : string{
+    return path()->cache_path(...$path);
+}
+
+function support_path(...$path) : string{
+    return path()->support_path(...$path);
+}
+
+function public_path(...$path) : string{
+    return path()->public_path(...$path);
+}

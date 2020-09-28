@@ -21,7 +21,13 @@ class DBOperate implements \core\leader\database\DBOperate{
     public function __construct(string $sqlfilename,Container $app){
         $this->sqlfilename = $sqlfilename;
 
-        $this->sqldata = require pathjoin(APP,$this->sqlfilename,'/sql.php');
+        $sqlpath = app_path($this->sqlfilename,'/sql.php');
+        if (file_exists($sqlpath)){
+            $this->sqldata = require $sqlpath;
+        }else{
+            $this->sqldata = [];
+        }
+        
     }
 
     public function getConnect() : DBConnect{
@@ -69,8 +75,8 @@ class DBOperate implements \core\leader\database\DBOperate{
         }
 
         # 参数处理
-        if (count($param)!=0)
-            $param = $param[0];
+        // if (count($param)!=0)
+        //     $param = $param[0];
 
         if (!isset($data['ret'])) $data['ret'] = 'list';
 

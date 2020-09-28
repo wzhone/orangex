@@ -5,14 +5,13 @@ use \core\Container;
 use \core\leader\http\Cookie;
 use \core\leader\config\Config;
 use \core\leader\http\Response;
-use core\leader\session\SessionOperate;
-
+use \core\leader\session\Session;
 
 class midd2{
     public function preHandle(
         Container $app,
         Config $config,
-        SessionOperate $session,
+        Session $session,
         Cookie $cookie,
         Response $response){
             
